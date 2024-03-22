@@ -1,4 +1,4 @@
-package loki
+package logstore
 
 import (
 	"bytes"
@@ -13,7 +13,7 @@ import (
 
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/grafana/loki/pkg/logqlmodel/stats"
-	"github.com/grafana/xk6-loki/flog"
+	"github.com/insightmon/xk6-logstore/flog"
 	"github.com/prometheus/common/model"
 	"go.k6.io/k6/js/modules"
 	"go.k6.io/k6/lib"
@@ -288,7 +288,7 @@ func (c *Client) pushBatch(batch *Batch) (httpext.Response, error) {
 
 func (c *Client) send(state *lib.State, buf []byte, useProtobuf bool) (httpext.Response, error) {
 	httpResp := httpext.NewResponse()
-	path := "/loki/api/v1/push"
+	path := "/logstore/api/v1/push"
 	r, err := http.NewRequest(http.MethodPost, c.cfg.URL.String()+path, nil)
 	if err != nil {
 		return *httpResp, err

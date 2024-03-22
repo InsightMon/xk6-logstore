@@ -1,4 +1,4 @@
-module github.com/grafana/xk6-loki
+module github.com/insightmon/xk6-logstore
 
 go 1.19
 

@@ -1,5 +1,5 @@
 import { check, fail } from 'k6';
-import loki from 'k6/x/loki';
+import logstore from 'k6/x/logstore';
 
 /*
  * Host name with port
@@ -71,8 +71,8 @@ const labelCardinality = {
   "namespace": 1,
   "pod": 10,
 };
-const conf = new loki.Config(BASE_URL, 10000, 0.9, labelCardinality);
-const client = new loki.Client(conf);
+const conf = new logstore.Config(BASE_URL, 10000, 0.9, labelCardinality);
+const client = new logstore.Client(conf);
 
 /**
  * Entrypoint for write scenario

@@ -1,5 +1,5 @@
-// Package loki is the k6 extension module.
-package loki
+// Package logstore is the k6 extension module.
+package logstore
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/dop251/goja"
-	"github.com/grafana/xk6-loki/flog"
+	"github.com/insightmon/xk6-logstore/flog"
 	"github.com/prometheus/common/model"
 	"github.com/sirupsen/logrus"
 	"go.k6.io/k6/js/common"
@@ -22,18 +22,18 @@ import (
 var (
 	DefaultProtobufRatio = 0.9
 	DefaultPushTimeout   = 10000
-	DefaultUserAgent     = "xk6-loki/0.0.1"
+	DefaultUserAgent     = "xk6-logstore/0.0.1"
 )
 
 // init registers the Go module as Javascript module for k6
 // The module can be imported like so:
 // ```js
-// import remote from 'k6/x/loki';
+// import remote from 'k6/x/logstore';
 // ```
 //
-// See examples/simple.js for a full example how to use the xk6-loki extension.
+// See examples/simple.js for a full example how to use the xk6-logstore extension.
 func init() {
-	modules.Register("k6/x/loki", new(LokiRoot))
+	modules.Register("k6/x/logstore", new(LokiRoot))
 }
 
 var _ modules.Module = &LokiRoot{}
@@ -56,7 +56,7 @@ func (*LokiRoot) NewModuleInstance(vu modules.VU) modules.Instance {
 		common.Throw(vu.Runtime(), err)
 	}
 
-	logger := vu.InitEnv().Logger.WithField("component", "xk6-loki")
+	logger := vu.InitEnv().Logger.WithField("component", "xk6-logstore")
 	return &Loki{vu: vu, metrics: m, logger: logger}
 }
 
@@ -118,7 +118,7 @@ func (r *Loki) Exports() modules.Exports {
 
 // config provides a constructor interface for the Config for the Javascript runtime
 // ```js
-// const cfg = new loki.Config(url);
+// const cfg = new logstore.Config(url);
 // ```
 func (r *Loki) config(c goja.ConstructorCall) *goja.Object {
 	rt := r.vu.Runtime()
@@ -137,11 +137,11 @@ func (r *Loki) config(c goja.ConstructorCall) *goja.Object {
 	}
 	if len(c.Arguments) > 1 || c.Argument(0).ExportType().Kind() == reflect.String {
 		if err := r.parsePositionalConfig(c, config); err != nil {
-			common.Throw(rt, fmt.Errorf("could not parse positional loki config: %w", err))
+			common.Throw(rt, fmt.Errorf("could not parse positional logstore config: %w", err))
 		}
 	} else {
 		if err := r.parseConfigObject(c.Argument(0).ToObject(rt), config); err != nil {
-			common.Throw(rt, fmt.Errorf("could not parse loki config object: %w", err))
+			common.Throw(rt, fmt.Errorf("could not parse logstore config object: %w", err))
 		}
 	}
 
@@ -163,7 +163,7 @@ func (r *Loki) parsePositionalConfig(c goja.ConstructorCall, config *Config) err
 	urlString := c.Argument(0).String()
 	u, err := url.Parse(urlString)
 	if err != nil {
-		return fmt.Errorf("invalid loki URL: %w", err)
+		return fmt.Errorf("invalid logstore URL: %w", err)
 	}
 	config.URL = *u
 
@@ -203,7 +203,7 @@ func (r *Loki) parseConfigObject(c *goja.Object, config *Config) error {
 	if v := c.Get("url"); !isNully(v) {
 		u, err := url.Parse(v.String())
 		if err != nil {
-			return fmt.Errorf("invalid loki URL: %w", err)
+			return fmt.Errorf("invalid logstore URL: %w", err)
 		}
 		config.URL = *u
 
@@ -250,7 +250,7 @@ func (r *Loki) parseConfigObject(c *goja.Object, config *Config) error {
 
 // client provides a constructor interface for the Config for the Javascript runtime
 // ```js
-// const client = new loki.Client(cfg);
+// const client = new logstore.Client(cfg);
 // ```
 func (r *Loki) client(c goja.ConstructorCall) *goja.Object {
 	rt := r.vu.Runtime()

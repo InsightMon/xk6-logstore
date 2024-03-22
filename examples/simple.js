@@ -1,5 +1,5 @@
 import {sleep, check} from 'k6';
-import loki from 'k6/x/loki';
+import logstore from 'k6/x/logstore';
 
 /**
  * URL used for push and query requests
@@ -23,8 +23,8 @@ const MB = KB * KB;
 /**
  * Instantiate config and Loki client
  */
-const conf = new loki.Config(BASE_URL);
-const client = new loki.Client(conf);
+const conf = new logstore.Config(BASE_URL);
+const client = new logstore.Client(conf);
 
 /**
  * Define test scenario

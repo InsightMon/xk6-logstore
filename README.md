@@ -1,4 +1,4 @@
-# xk6-loki
+# xk6-logstore
 
 **A k6 extension for pushing logs to Loki.**
 
@@ -11,11 +11,11 @@
    go install go.k6.io/xk6/cmd/xk6@latest
    ```
 
-1. Checkout `grafana/xk6-loki`
+1. Checkout `grafana/xk6-logstore`
 
    ```bash
-   git clone https://github.com/grafana/xk6-loki
-   cd xk6-loki
+   git clone https://github.com/insightmon/xk6-logstore
+   cd xk6-logstore
    ```
 
 1. Build the extension
@@ -26,13 +26,13 @@
 
 ## Javascript API
 
-### Module `k6/x/loki`
+### Module `k6/x/logstore`
 
-The `k6/x/loki` module contains the Loki extension to interact with the Loki API.
+The `k6/x/logstore` module contains the Loki extension to interact with the Loki API.
 To import the module add
 
 ```js
-import loki from 'k6/x/loki';
+import logstore from 'k6/x/logstore';
 ```
 
 on top of your test file.
@@ -53,15 +53,15 @@ takes the following arguments:
 **Example:**
 
 ```js
-import loki from 'k6/x/loki';
-let conf = loki.Config("localhost:3100");
+import logstore from 'k6/x/logstore';
+let conf = logstore.Config("localhost:3100");
 ```
 
 ### Class `Labels(labels)`
 
 The class `Labels` allows the definition of custom labels that can be used
 instead of the built-in labels. An instance of this class can be passed as
-fifth argument to the `loki.Config` constructor.
+fifth argument to the `logstore.Config` constructor.
 
 | argument | type   | description | default |
 | -------- | ------ | ----------- | ------- |
@@ -70,8 +70,8 @@ fifth argument to the `loki.Config` constructor.
 **Example:**
 
 ```js
-import loki from 'k6/x/loki';
-let labels = loki.Labels({
+import logstore from 'k6/x/logstore';
+let labels = logstore.Labels({
   "format": ["json", "logfmt"], // must contain at least one of the supported log formats
   "cluster": ["prod-us-east-0", "prod-eu-west-1"],
   "namespace": ["dev", "staging", "prod"],
@@ -91,9 +91,9 @@ The constructor takes the following arguments:
 **Example:**
 
 ```js
-import loki from 'k6/x/loki';
-let conf = loki.Config("localhost:3100");
-let client = loki.Client(conf);
+import logstore from 'k6/x/logstore';
+let conf = logstore.Config("localhost:3100");
+let client = logstore.Client(conf);
 ```
 
 #### Method `client.push()`
@@ -102,7 +102,7 @@ This function is a shortcut for `client.pushParameterized(5, 800*1024, 1024*1024
 
 #### Method `client.pushParameterized(streams, minSize, maxSize)`
 
-Execute a push request ([POST /loki/api/v1/push](https://grafana.com/docs/loki/latest/api/#post-lokiapiv1push)).
+Execute a push request ([POST /logstore/api/v1/push](https://grafana.com/docs/loki/latest/api/#post-lokiapiv1push)).
 
 The function `pushParameterized` generates batch of logs and pushes it to the Loki instance.
 A batch consists of one or more streams which hold multiple log lines.
@@ -122,7 +122,7 @@ This function is a shortcut for `client.instantQueryAt(query, limit, time.Now())
 
 #### Method `client.instantQueryAt(query, limit, instant)`
 
-Execute an instant query ([GET /loki/api/v1/query](https://grafana.com/docs/loki/latest/api/#get-lokiapiv1query)).
+Execute an instant query ([GET /logstore/api/v1/query](https://grafana.com/docs/loki/latest/api/#get-lokiapiv1query)).
 
 | argument | type    | description                           | default |
 |----------|---------|---------------------------------------|---------|
@@ -136,7 +136,7 @@ This function is a shortcut for `client.rangeQueryAt(query, duration, limit, tim
 
 #### Method `client.rangeQueryAt(query, duration, limit, instant)`
 
-Execute a range query ([GET /loki/api/v1/query_range](https://grafana.com/docs/loki/latest/api/#get-lokiapiv1query_range)).
+Execute a range query ([GET /logstore/api/v1/query_range](https://grafana.com/docs/loki/latest/api/#get-lokiapiv1query_range)).
 
 | argument | type    | description                                            | default |
 |----------|---------|--------------------------------------------------------|---------|
@@ -153,7 +153,7 @@ This function is a shortcut for `client.labelsQueryAt(duration, time.Now())` whe
 
 #### Method `client.labelsQueryAt(duration, instant)`
 
-Execute a labels query ([GET /loki/api/v1/labels](https://grafana.com/docs/loki/latest/api/#get-lokiapiv1labels)).
+Execute a labels query ([GET /logstore/api/v1/labels](https://grafana.com/docs/loki/latest/api/#get-lokiapiv1labels)).
 
 | argument | type    | description                                                                   | default |
 |----------|---------|-------------------------------------------------------------------------------|---------|
@@ -168,7 +168,7 @@ This function is a shortcut for `client.labelValuesQueryAt(label, duration, time
 
 #### Method `client.labelValuesQueryAt(label, duration, instant)`
 
-Execute a label values query ([GET /loki/api/v1/label/<name>/values](https://grafana.com/docs/loki/latest/api/#get-lokiapiv1labelnamevalues)).
+Execute a label values query ([GET /logstore/api/v1/label/<name>/values](https://grafana.com/docs/loki/latest/api/#get-lokiapiv1labelnamevalues)).
 
 | argument | type    | description                                                                         | default |
 |----------|---------|-------------------------------------------------------------------------------------|---------|
@@ -184,7 +184,7 @@ This function is a shortcut for `client.seriesQueryAt(matchers, duration, time.N
 
 #### Method `client.seriesQueryAt(matchers, duration, instant)`
 
-Execute a series query ([GET /loki/api/v1/series](https://grafana.com/docs/loki/latest/api/#series)).
+Execute a series query ([GET /logstore/api/v1/series](https://grafana.com/docs/loki/latest/api/#series)).
 
 | argument | type    | description                                                                                | default |
 |----------|---------|--------------------------------------------------------------------------------------------|---------|
@@ -196,7 +196,7 @@ Execute a series query ([GET /loki/api/v1/series](https://grafana.com/docs/loki/
 
 ## Labels
 
-`xk6-loki` uses the following built-in label names for generating streams:
+`xk6-logstore` uses the following built-in label names for generating streams:
 
 | name | values | notes |
 | ---- | ------ | ----- |
@@ -215,7 +215,7 @@ The total amount of different streams is defined by the carthesian product of al
 
 ### Custom labels
 
-Additionally, `xk6-loki` also supports custom labels that can be used instead
+Additionally, `xk6-logstore` also supports custom labels that can be used instead
 of the built-in labels.
 
 See [examples/custom-labels.js](examples/custom-labels.js) for a full example with custom labels.
@@ -247,7 +247,7 @@ These metrics are collected only for instant and range queries.
 
 ```js
 import sleep from 'k6';
-import loki from 'k6/x/loki';
+import logstore from 'k6/x/logstore';
 
 /**
  * URL used for push and query requests
@@ -288,12 +288,12 @@ export const options = {
 /**
  * Create configuration object
  */
-const conf = new loki.Config(BASE_URL, timeout, ratio, cardinality);
+const conf = new logstore.Config(BASE_URL, timeout, ratio, cardinality);
 
 /**
  * Create Loki client
  */
-const client = new loki.Client(conf);
+const client = new logstore.Client(conf);
 
 export default () => {
   // Push a batch of 2 streams with a payload size between 500KB and 1MB

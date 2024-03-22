@@ -1,5 +1,5 @@
 import { check, sleep } from 'k6';
-import loki from 'k6/x/loki';
+import logstore from 'k6/x/logstore';
 
 const BASE_URL = "http://localhost:3100";
 const KB = 1024;
@@ -10,17 +10,17 @@ export const options = {
   iterations: 100,
 };
 
-const labels = loki.Labels({
+const labels = logstore.Labels({
   "format": ["logfmt"], // must contain at least one of the supported log formats
   "os": ["linux"],
   "cluster": ["k3d", "minikube"],
-  "namespace": ["loki-prod", "loki-dev"],
+  "namespace": ["logstore-prod", "logstore-dev"],
   "container": ["distributor", "ingester", "querier", "query-frontend", "query-scheduler", "index-gateway", "compactor"],
   "instance": ["localhost"], // overrides the `instance` label which is otherwise derived from the hostname and VU
 });
 
-const conf = new loki.Config(BASE_URL, 10000, 1.0, {}, labels);
-const client = new loki.Client(conf);
+const conf = new logstore.Config(BASE_URL, 10000, 1.0, {}, labels);
+const client = new logstore.Client(conf);
 
 export default () => {
   let res = client.pushParameterized(10, 1 * MB, 2 * MB);

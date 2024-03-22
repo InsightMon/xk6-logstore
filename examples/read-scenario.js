@@ -1,5 +1,5 @@
 import { check, fail } from 'k6';
-import loki from 'k6/x/loki';
+import logstore from 'k6/x/logstore';
 
 /*
  * Host name with port
@@ -54,8 +54,8 @@ const labelCardinality = {
   "namespace": 1,
   "pod": 5,
 };
-const conf = new loki.Config(BASE_URL, 60000, 0.9, labelCardinality);
-const client = new loki.Client(conf);
+const conf = new logstore.Config(BASE_URL, 60000, 0.9, labelCardinality);
+const client = new logstore.Client(conf);
 
 const createSelectorByRatio = (ratioConfig) => {
   let ratioSum = 0;
@@ -147,7 +147,7 @@ function readLabels() {
   const range = selectRangeByRatio(Math.random())
   // Execute query.
   let res = client.labelsQuery(range);
-  // Assert the response from loki.
+  // Assert the response from logstore.
   checkResponse(res, "successful labels query", range);
 }
 
@@ -161,7 +161,7 @@ function readLabelValues() {
   const range = selectRangeByRatio(Math.random());
   // Execute query.
   let res = client.labelValuesQuery(label, range);
-  // Assert the response from loki.
+  // Assert the response from logstore.
   checkResponse(res, "successful label values query", range);
 }
 
@@ -187,7 +187,7 @@ function readInstant() {
   const query = randomChoice(instantQuerySuppliers)();
   // Execute query.
   let res = client.instantQuery(query, limit);
-  // Assert the response from loki.
+  // Assert the response from logstore.
   checkResponse(res, "successful instant query");
 }
 
@@ -210,7 +210,7 @@ function readRange() {
   let range = selectRangeByRatio(Math.random());
   // Execute query.
   let res = client.rangeQuery(query, range, limit);
-  // Assert the response from loki.
+  // Assert the response from logstore.
   checkResponse(res, "successful range query", range);
 }
 
@@ -231,7 +231,7 @@ function readSeries() {
   let selector = randomChoice(seriesSelectorSuppliers)();
   // Execute query.
   let res = client.seriesQuery(selector, range);
-  // Assert the response from loki.
+  // Assert the response from logstore.
   checkResponse(res, "successful series query", range);
 }
 

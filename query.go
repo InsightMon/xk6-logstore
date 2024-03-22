@@ -1,4 +1,4 @@
-package loki
+package logstore
 
 import (
 	"fmt"
@@ -20,15 +20,15 @@ const (
 func (t QueryType) Endpoint() string {
 	switch t {
 	case InstantQuery:
-		return "/loki/api/v1/query"
+		return "/logstore/api/v1/query"
 	case RangeQuery:
-		return "/loki/api/v1/query_range"
+		return "/logstore/api/v1/query_range"
 	case LabelsQuery:
-		return "/loki/api/v1/labels"
+		return "/logstore/api/v1/labels"
 	case LabelValuesQuery:
-		return "/loki/api/v1/label/%s/values"
+		return "/logstore/api/v1/label/%s/values"
 	case SeriesQuery:
-		return "/loki/api/v1/series"
+		return "/logstore/api/v1/series"
 	default:
 		return ""
 	}
