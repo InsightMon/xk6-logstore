@@ -14,4 +14,4 @@ go.sum: $(GO_FILES) go.mod
 	go mod tidy
 
 run:
-	$(PWD)/k6 run examples/read-write-scenario.js
+	$(PWD)/k6 run tests/simple.js
