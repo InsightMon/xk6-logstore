@@ -218,7 +218,7 @@ The total amount of different streams is defined by the carthesian product of al
 Additionally, `xk6-logstore` also supports custom labels that can be used instead
 of the built-in labels.
 
-See [examples/custom-labels.js](examples/custom-labels.js) for a full example with custom labels.
+See [examples/custom-labels.js](tests/custom-labels.js) for a full example with custom labels.
 
 ## Metrics
 
@@ -308,4 +308,4 @@ export default () => {
 ./k6 run examples/simple.js
 ```
 
-You can find more examples in the [examples/](./examples) folder.
+You can find more examples in the [examples/](./tests) folder.
